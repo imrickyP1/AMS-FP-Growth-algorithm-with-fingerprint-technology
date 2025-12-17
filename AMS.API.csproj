@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- Windows Runtime Support for ZKFinger SDK -->
+    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+    <PlatformTarget>x64</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- MySQL/MariaDB -->
+    <PackageReference Include="MySqlConnector" Version="2.3.7" />
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    
+    <!-- Authentication -->
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
+    
+    <!-- ZKTeco SDK Integration -->
+    <PackageReference Include="System.IO.Ports" Version="9.0.0" />
+    
+    <!-- Swagger/OpenAPI -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+    
+    <!-- Configuration -->
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
+  </ItemGroup>
+
+  <!-- Native DLLs for ZKFinger SDK (Windows only) -->
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64' Or '$(RuntimeIdentifier)' == ''">
+    <None Include="runtimes\win-x64\native\*.dll" CopyToOutputDirectory="PreserveNewest" Link="%(Filename)%(Extension)" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x86'">
+    <None Include="runtimes\win-x86\native\*.dll" CopyToOutputDirectory="PreserveNewest" Link="%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- Copy dlls folder to output directory -->
+  <ItemGroup>
+    <None Include="dlls\**\*.*" CopyToOutputDirectory="PreserveNewest" LinkBase="dlls\" />
+  </ItemGroup>
+
+</Project>
+
