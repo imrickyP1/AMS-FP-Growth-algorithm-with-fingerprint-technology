@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User List | Attendance Monitoring System</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    /* Enhanced Sidebar */
+    .sidebar {
+      background: linear-gradient(180deg, #0c3b6a 0%, #08284a 100%);
+    }
+
+    .sidebar .menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar .menu a i {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Page Header */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .page-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--neutral-900);
+    }
+
+    .page-header .actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* Enhanced Table */
+    .table-wrapper {
+      background: white;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--neutral-100);
+      overflow: hidden;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: var(--neutral-50);
+      border-bottom: 1px solid var(--neutral-200);
+    }
+
+    .table-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--neutral-700);
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--neutral-200);
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      font-size: 13px;
+      width: 200px;
+    }
+
+    .search-box i {
+      color: var(--neutral-400);
+    }
+
+    #usersTable {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    #usersTable thead {
+      background: linear-gradient(135deg, #0c3b6a 0%, #0a325a 100%);
+      color: white;
+    }
+
+    #usersTable th {
+      padding: 16px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    #usersTable td {
+      padding: 16px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--neutral-100);
+      color: var(--neutral-700);
+    }
+
+    #usersTable tbody tr:hover {
+      background: var(--neutral-50);
+    }
+
+    #usersTable tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-info {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .badge-neutral {
+      background: var(--neutral-100);
+      color: var(--neutral-600);
+    }
+
+    /* Action Buttons */
+    .action-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .action-btn.enroll {
+      background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+      color: white;
+    }
+
+    .action-btn.update {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      color: white;
+    }
+
+    .action-btn.delete {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+    }
+
+    /* Add Button */
+    .add-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition-fast);
+    }
+
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(12, 59, 106, 0.3);
+    }
+
+    /* Logout Button */
+    .logout-btn {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      border: none;
+      color: white;
+      padding: 14px 24px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--neutral-500);
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      color: var(--neutral-300);
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <img src="assets/Dohinob logo.png" alt="Logo" class="logo" onerror="this.style.display='none'" />
+      <ul class="menu">
+        <li><a href="dashboard.html"><i class="fa-solid fa-home"></i> Dashboard</a></li>
+        <li><a href="list.html" class="active"><i class="fa-solid fa-users"></i> User List</a></li>
+        <li><a href="records.html"><i class="fa-solid fa-clipboard-list"></i> Records</a></li>
+        <li><a href="report.html"><i class="fa-solid fa-chart-bar"></i> Reports</a></li>
+      </ul>
+      <button id="logoutBtn" class="logout-btn">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h2><i class="fa-solid fa-users"></i> User Management</h2>
+        <div class="actions">
+          <button id="newEmployeeBtn" class="add-btn">
+            <i class="fa-solid fa-user-plus"></i>
+            Add Employee
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <div class="table-header">
+          <h3><span id="userCount">0</span> Employees</h3>
+          <div class="search-box">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search users...">
+          </div>
+        </div>
+
+        <table id="usersTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Employee</th>
+              <th>Gender</th>
+              <th>Position</th>
+              <th>Fingerprint</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="6">
+                <div class="empty-state">
+                  <i class="fa-solid fa-users"></i>
+                  <p>Loading users...</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/api-config.js"></script>
+  <script src="js/scanner-service.js"></script>
+  <script src="js/fingerprint.js"></script>
+  <script src="js/list.js"></script>
+  <script src="js/authGuard.js"></script>
+  <script src="js/logout.js"></script>
+
+  <script>
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function () {
+      const filter = this.value.toLowerCase();
+      const rows = document.querySelectorAll('#usersTable tbody tr');
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+
+</html>

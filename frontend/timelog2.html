@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Log 2 | Attendance Monitoring System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .header {
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: #333;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .datetime-display {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      color: white;
+    }
+
+    .date {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .time {
+      font-size: 48px;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+      margin: 10px 0;
+    }
+
+    .session-badge {
+      display: inline-block;
+      padding: 5px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .session-badge.am {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .session-badge.pm {
+      background: #17a2b8;
+      color: white;
+    }
+
+    /* Control Button */
+    .control-section {
+      margin: 20px 0;
+    }
+
+    .btn {
+      padding: 15px 40px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+    }
+
+    .btn-success.active {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      animation: glow 1.5s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4); }
+      50% { box-shadow: 0 6px 30px rgba(220, 53, 69, 0.8); }
+    }
+
+    /* IN/OUT Toggle */
+    .inout-toggle {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .toggle-btn {
+      padding: 12px 30px;
+      border: 2px solid #667eea;
+      background: white;
+      color: #667eea;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggle-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .toggle-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: transparent;
+    }
+
+    .toggle-btn i {
+      font-size: 18px;
+    }
+
+    /* Scanner Status */
+    .scanner-status {
+      padding: 30px;
+      margin: 20px 0;
+      border: 3px dashed #ddd;
+      border-radius: 20px;
+      background: #f8f9fa;
+      transition: all 0.3s ease;
+    }
+
+    .scanner-status.scanning {
+      border-color: #667eea;
+      background: linear-gradient(135deg, #e8f0fe 0%, #f0e8fe 100%);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+      }
+      50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 20px rgba(102, 126, 234, 0);
+      }
+    }
+
+    .scanner-icon {
+      font-size: 100px;
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+
+    .scanner-status.scanning .scanner-icon {
+      animation: iconPulse 1s infinite;
+    }
+
+    @keyframes iconPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.7; }
+    }
+
+    .scanner-text {
+      font-size: 18px;
+      color: #666;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .scanner-status.scanning .scanner-text {
+      color: #667eea;
+      animation: textGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes textGlow {
+      0%, 100% {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+      }
+      50% {
+        opacity: 0.8;
+        text-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+      }
+    }
+
+    .scanner-hint {
+      font-size: 13px;
+      color: #999;
+    }
+
+    .scanner-status.scanning .scanner-hint {
+      color: #667eea;
+      animation: fadeInOut 2s ease-in-out infinite;
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    /* Connection Status */
+    .connection-status {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .connection-status.online {
+      background: #28a745;
+      color: white;
+    }
+
+    .connection-status.offline {
+      background: #dc3545;
+      color: white;
+    }
+
+    .connection-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: white;
+    }
+
+    .connection-status.online .connection-dot {
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Logs */
+    .logs-section {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid #eee;
+      text-align: left;
+    }
+
+    .logs-section h3 {
+      color: #333;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logs-list {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .log-item {
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #667eea;
+    }
+
+    .log-item.time-in {
+      border-left-color: #28a745;
+    }
+
+    .log-item.time-out {
+      border-left-color: #dc3545;
+    }
+
+    .log-name {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .log-time {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* Navigation */
+    .nav-links {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <!-- Connection Status -->
+  <div class="connection-status offline" id="connectionStatus">
+    <span class="connection-dot"></span>
+    <span id="connectionLabel">Connecting...</span>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <h1>
+        <i class="fas fa-fingerprint"></i>
+        Time Log System
+      </h1>
+      <p>Automatic fingerprint attendance tracking</p>
+    </div>
+
+    <!-- Date & Time -->
+    <div class="datetime-display">
+      <div class="date" id="currentDate">Loading...</div>
+      <div class="time" id="currentTime">--:--:--</div>
+      <span class="session-badge am" id="sessionBadge">AM SESSION</span>
+    </div>
+
+    <!-- IN/OUT Toggle -->
+    <div class="inout-toggle">
+      <button class="toggle-btn active" id="btnTimeIn">
+        <i class="fas fa-arrow-right-to-bracket"></i>
+        TIME IN
+      </button>
+      <button class="toggle-btn" id="btnTimeOut">
+        <i class="fas fa-arrow-right-from-bracket"></i>
+        TIME OUT
+      </button>
+    </div>
+
+    <!-- Control Button -->
+    <div class="control-section">
+      <button class="btn btn-success" id="btnAutoScan">
+        <i class="fas fa-play"></i>
+        <span id="btnText">Start</span>
+      </button>
+    </div>
+
+    <!-- Scanner Status -->
+    <div class="scanner-status" id="scannerStatus">
+      <i class="fas fa-fingerprint scanner-icon"></i>
+      <div class="scanner-text" id="scannerText">Click "Start Auto-Scan" to begin</div>
+      <div class="scanner-hint" id="scannerHint">Scanner will wait for fingerprint automatically</div>
+    </div>
+
+    <!-- Today's Logs -->
+    <div class="logs-section">
+      <h3>
+        <i class="fas fa-clock-rotate-left"></i>
+        Today's Attendance
+      </h3>
+      <div class="logs-list" id="logsList">
+        <p style="color: #999; font-size: 13px; text-align: center; padding: 20px;">No records yet today</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav-links">
+    <a href="login.html" class="nav-link">
+      <i class="fas fa-arrow-left"></i> Back to Login
+    </a>
+    <a href="splash.html" class="nav-link">
+      <i class="fas fa-home"></i> Home
+    </a>
+  </div>
+
+  <script src="js/api-config.js"></script>
+  <script src="js/timelog2.js"></script>
+</body>
+</html>

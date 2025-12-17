@@ -1,0 +1,76 @@
+/* ================================
+   PDF REPORT STYLES
+================================ */
+
+#pdfReport {
+  width: 100%;
+  padding: 25px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  background: white;
+}
+
+#pdfReport h1 {
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+#pdfReport p {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+.section-title {
+  font-size: 22px;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+/* Summary Cards Layout */
+.summary-row {
+  display: flex;
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.summary-card {
+  flex: 1;
+  padding: 15px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.summary-card h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #444;
+}
+
+.summary-card p {
+  font-size: 26px;
+  font-weight: bold;
+  margin: 5px 0 0;
+}
+
+/* Tables */
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.info-table th,
+.info-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.info-table th {
+  background: #e9ecef;
+  text-align: left;
+}

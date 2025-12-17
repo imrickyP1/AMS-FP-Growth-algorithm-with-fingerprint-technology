@@ -1,0 +1,174 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* SPLASH SCREEN */
+.splash-body {
+  background-color: #e9edf3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.splash-container {
+  text-align: center;
+}
+
+.splash-header, .splash-footer {
+  background-color: #2b426b;
+  color: white;
+  font-weight: bold;
+  padding: 15px;
+  font-size: 1.3em;
+}
+
+.barangay-logo {
+  margin: 30px 0;
+  width: 300px;
+  height: auto;
+  cursor: pointer;
+}
+
+/* LOGIN PAGE */
+.login-body {
+  background-color: #0f172a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  background-color: #1e293b;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  width: 300px;
+  text-align: center;
+}
+
+.login-container h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.login-container input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  background-color: #334155;
+  color: white;
+}
+
+.login-container button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.login-container button:hover {
+  background-color: #2563eb;
+}
+
+.register-text {
+  margin-top: 10px;
+  color: #cbd5e1;
+}
+
+.register-text a {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+/* =============================================
+   FINGERPRINT STATUS STYLES
+============================================= */
+.fingerprint-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.fingerprint-status.enrolled {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.fingerprint-status.not-enrolled {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+.fingerprint-status i {
+  font-size: 14px;
+}
+
+/* ACTION BUTTONS */
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.action-btn i {
+  font-size: 12px;
+}
+
+.enroll-btn {
+  background-color: #2b426b;
+  color: white;
+}
+
+.enroll-btn:hover {
+  background-color: #1e3050;
+}
+
+.update-btn {
+  background-color: #0369a1;
+  color: white;
+}
+
+.update-btn:hover {
+  background-color: #075985;
+}
+
+.delete-btn {
+  background-color: #dc2626;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #b91c1c;
+}

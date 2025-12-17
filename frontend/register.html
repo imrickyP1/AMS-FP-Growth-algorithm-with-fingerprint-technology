@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | Attendance Monitoring System</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  
+  <!-- Global Styles -->
+  <link rel="stylesheet" href="css/global.css" />
+  
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0c3b6a 0%, #1a5a9e 50%, #2b7bc9 100%);
+      padding: 20px;
+    }
+    
+    .register-wrapper {
+      width: 100%;
+      max-width: 480px;
+    }
+    
+    .register-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl), 0 0 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+    
+    .register-header {
+      background: linear-gradient(135deg, #0c3b6a 0%, #155fa0 100%);
+      padding: 32px 24px;
+      text-align: center;
+      color: white;
+    }
+    
+    .register-header .logo {
+      width: 80px;
+      height: 80px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .register-header .logo i {
+      font-size: 36px;
+      color: #0c3b6a;
+    }
+    
+    .register-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .register-header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .register-body {
+      padding: 32px 24px;
+    }
+    
+    /* Status Bars */
+    .status-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      transition: all var(--transition-normal);
+    }
+    
+    .status-bar .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .status-bar .status-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    
+    .status-bar .status-text {
+      flex: 1;
+    }
+    
+    .status-bar .status-action {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .status-bar .status-action:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Status States */
+    .status-bar.checking {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      color: #0369a1;
+    }
+    
+    .status-bar.checking .status-dot {
+      background: #0ea5e9;
+      animation: pulse-dot 1.5s infinite;
+    }
+    
+    .status-bar.online {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      color: #166534;
+    }
+    
+    .status-bar.online .status-dot {
+      background: #22c55e;
+    }
+    
+    .status-bar.offline {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      color: #991b1b;
+    }
+    
+    .status-bar.offline .status-dot {
+      background: #ef4444;
+    }
+    
+    .status-bar.warning {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e;
+    }
+    
+    .status-bar.warning .status-dot {
+      background: #f59e0b;
+    }
+    
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    
+    /* Form Styles */
+    .form-row {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .form-row .form-group {
+      flex: 1;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--neutral-700);
+      margin-bottom: 6px;
+    }
+    
+    .form-input-wrapper {
+      position: relative;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 14px;
+      border: 2px solid var(--neutral-200);
+      border-radius: var(--radius-md);
+      background: white;
+      transition: all var(--transition-fast);
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-500);
+      box-shadow: 0 0 0 4px rgba(61, 142, 220, 0.15);
+    }
+    
+    .form-input-wrapper .toggle-password {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--neutral-400);
+      transition: color var(--transition-fast);
+    }
+    
+    .form-input-wrapper .toggle-password:hover {
+      color: var(--neutral-600);
+    }
+    
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 44px;
+    }
+    
+    /* Fingerprint Section */
+    .fingerprint-section {
+      margin: 24px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-100) 100%);
+      border-radius: var(--radius-lg);
+      border: 2px dashed var(--neutral-300);
+      transition: all var(--transition-normal);
+    }
+    
+    .fingerprint-section.active {
+      border-color: var(--accent-info);
+      border-style: solid;
+      background: linear-gradient(135deg, #e0f7ff 0%, #cceeff 100%);
+    }
+    
+    .fingerprint-section.enrolled {
+      border-color: var(--accent-success);
+      border-style: solid;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    }
+    
+    .fingerprint-section.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    
+    .fingerprint-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    
+    .fingerprint-header h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--neutral-800);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .fingerprint-header .badge {
+      font-size: 11px;
+      padding: 3px 8px;
+    }
+    
+    .fingerprint-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+      background: white;
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+    }
+    
+    .fingerprint-icon {
+      font-size: 56px;
+      color: var(--neutral-300);
+      margin-bottom: 12px;
+      transition: all var(--transition-normal);
+    }
+    
+    .fingerprint-section.active .fingerprint-icon {
+      color: var(--accent-info);
+      animation: pulse-scan 1.2s infinite;
+    }
+    
+    .fingerprint-section.enrolled .fingerprint-icon {
+      color: var(--accent-success);
+    }
+    
+    @keyframes pulse-scan {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.7; }
+    }
+    
+    .fingerprint-text {
+      font-size: 13px;
+      color: var(--neutral-600);
+      text-align: center;
+    }
+    
+    .fingerprint-section.enrolled .fingerprint-text {
+      color: var(--accent-success);
+      font-weight: 500;
+    }
+    
+    .fingerprint-btn {
+      width: 100%;
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--primary-600);
+      background: white;
+      color: var(--primary-600);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .fingerprint-btn:hover:not(:disabled) {
+      background: var(--primary-600);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(12, 59, 106, 0.3);
+    }
+    
+    .fingerprint-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .fingerprint-btn.scanning {
+      background: var(--accent-info);
+      border-color: var(--accent-info);
+      color: white;
+    }
+    
+    .fingerprint-btn.success {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: white;
+    }
+    
+    /* Submit Button */
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+      color: white;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      margin-top: 8px;
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(12, 59, 106, 0.4);
+    }
+    
+    /* Footer Links */
+    .register-footer {
+      text-align: center;
+      padding: 20px 24px;
+      background: var(--neutral-50);
+      border-top: 1px solid var(--neutral-200);
+    }
+    
+    .register-footer p {
+      font-size: 14px;
+      color: var(--neutral-600);
+    }
+    
+    .register-footer a {
+      color: var(--primary-600);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    
+    .register-footer a:hover {
+      color: var(--primary-500);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-wrapper">
+    <div class="register-card">
+      <!-- Header -->
+      <div class="register-header">
+        <div class="logo">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h1>Create Account</h1>
+        <p>Attendance Monitoring System</p>
+      </div>
+      
+      <!-- Body -->
+      <div class="register-body">
+        <!-- Status Indicators -->
+        <div class="status-bars">
+          <!-- API Status -->
+          <div class="status-bar checking" id="apiStatus">
+            <span class="status-dot"></span>
+            <i class="fa-solid fa-server status-icon"></i>
+            <span class="status-text" id="apiStatusText">Checking API service...</span>
+          </div>
+          
+          <!-- Scanner Status -->
+          <div class="status-bar checking" id="scannerStatus">
+            <span class="status-dot"></span>
+            <i class="fa-solid fa-fingerprint status-icon"></i>
+            <span class="status-text" id="scannerStatusText">Detecting scanner...</span>
+            <span class="status-action" id="refreshScanner" title="Refresh">
+              <i class="fa-solid fa-sync-alt"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Registration Form -->
+        <form id="registerForm">
+          <!-- Username -->
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-input" id="username" placeholder="Enter your username" required />
+          </div>
+          
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="form-input-wrapper">
+              <input type="password" class="form-input" id="password" placeholder="Create a password" required />
+              <i class="fa-solid fa-eye-slash toggle-password" id="togglePassword"></i>
+            </div>
+          </div>
+          
+          <!-- Gender & Position -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select class="form-input form-select" id="gender" required>
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Position</label>
+              <select class="form-input form-select" id="position" required>
+                <option value="">Select</option>
+                <option value="admin">Admin</option>
+                <option value="official">Official</option>
+                <option value="staff">Staff</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Fingerprint Section -->
+          <div class="fingerprint-section" id="fingerprintSection">
+            <div class="fingerprint-header">
+              <h4>
+                <i class="fa-solid fa-fingerprint"></i>
+                Fingerprint Enrollment
+              </h4>
+              <span class="badge badge-neutral" id="fingerprintBadge">Optional</span>
+            </div>
+            
+            <div class="fingerprint-display">
+              <i class="fa-solid fa-fingerprint fingerprint-icon" id="fingerprintIcon"></i>
+              <span class="fingerprint-text" id="fingerprintText">Scan your fingerprint to enroll</span>
+            </div>
+            
+            <button type="button" class="fingerprint-btn" id="enrollFingerprintBtn">
+              <i class="fa-solid fa-fingerprint"></i>
+              <span>Scan Fingerprint</span>
+            </button>
+            
+            <input type="hidden" id="fingerprintTemplate" name="fingerprintTemplate" />
+          </div>
+          
+          <!-- Submit -->
+          <button type="submit" class="submit-btn">
+            <i class="fa-solid fa-user-plus"></i>
+            Create Account
+          </button>
+        </form>
+      </div>
+      
+      <!-- Footer -->
+      <div class="register-footer">
+        <p>Already have an account? <a href="login.html">Sign In</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api-config.js"></script>
+  <script src="js/scanner-service.js"></script>
+  <script src="js/fingerprint.js"></script>
+  
+  <script>
+    // ===============================================
+    // Status Checking
+    // ===============================================
+    const apiStatusEl = document.getElementById('apiStatus');
+    const apiStatusText = document.getElementById('apiStatusText');
+    const scannerStatusEl = document.getElementById('scannerStatus');
+    const scannerStatusText = document.getElementById('scannerStatusText');
+    const fingerprintSection = document.getElementById('fingerprintSection');
+    const enrollBtn = document.getElementById('enrollFingerprintBtn');
+    const refreshBtn = document.getElementById('refreshScanner');
+    
+    let apiOnline = false;
+    let scannerConnected = false;
+    
+    async function checkApiStatus() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/status`, {
+          method: 'GET',
+          signal: AbortSignal.timeout(5000)
+        });
+        
+        if (response.ok) {
+          apiStatusEl.className = 'status-bar online';
+          apiStatusText.textContent = 'API Service Online';
+          apiOnline = true;
+          return true;
+        }
+      } catch (error) {
+        apiStatusEl.className = 'status-bar offline';
+        apiStatusText.textContent = 'API Service Offline';
+        apiOnline = false;
+      }
+      return false;
+    }
+    
+    async function checkScannerStatus() {
+      try {
+        // First check if API is online
+        if (!apiOnline) {
+          scannerStatusEl.className = 'status-bar offline';
+          scannerStatusText.textContent = 'Scanner unavailable (API offline)';
+          updateFingerprintSection(false);
+          return;
+        }
+        
+        // Try to get scanner status from API
+        const response = await fetch(`${API_BASE_URL}/scanner/detect`, {
+          method: 'GET',
+          signal: AbortSignal.timeout(5000)
+        });
+        
+        const data = await response.json();
+        
+        if (data.deviceCount > 0) {
+          scannerStatusEl.className = 'status-bar online';
+          scannerStatusText.textContent = `Scanner Connected (${data.deviceCount} device${data.deviceCount > 1 ? 's' : ''})`;
+          scannerConnected = true;
+          updateFingerprintSection(true);
+        } else {
+          scannerStatusEl.className = 'status-bar warning';
+          scannerStatusText.textContent = 'No scanner detected - Connect USB device';
+          scannerConnected = false;
+          updateFingerprintSection(false);
+        }
+      } catch (error) {
+        // Fallback to ZKBioOnline check
+        try {
+          const isAvailable = await FingerprintEnrollment.isAvailable();
+          if (isAvailable) {
+            scannerStatusEl.className = 'status-bar online';
+            scannerStatusText.textContent = 'ZKBioOnline Connected';
+            scannerConnected = true;
+            updateFingerprintSection(true);
+          } else {
+            scannerStatusEl.className = 'status-bar warning';
+            scannerStatusText.textContent = 'Scanner not detected';
+            scannerConnected = false;
+            updateFingerprintSection(false);
+          }
+        } catch (e) {
+          scannerStatusEl.className = 'status-bar offline';
+          scannerStatusText.textContent = 'Scanner service unavailable';
+          scannerConnected = false;
+          updateFingerprintSection(false);
+        }
+      }
+    }
+    
+    function updateFingerprintSection(enabled) {
+      if (enabled) {
+        fingerprintSection.classList.remove('disabled');
+        enrollBtn.disabled = false;
+      } else {
+        fingerprintSection.classList.add('disabled');
+        enrollBtn.disabled = true;
+      }
+    }
+    
+    async function refreshStatus() {
+      scannerStatusEl.className = 'status-bar checking';
+      scannerStatusText.textContent = 'Detecting scanner...';
+      
+      await checkApiStatus();
+      await checkScannerStatus();
+    }
+    
+    // Initial status check
+    document.addEventListener('DOMContentLoaded', async () => {
+      await refreshStatus();
+      
+      // Periodic status check
+      setInterval(refreshStatus, 10000);
+    });
+    
+    // Refresh button
+    refreshBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const icon = refreshBtn.querySelector('i');
+      icon.classList.add('fa-spin');
+      await refreshStatus();
+      setTimeout(() => icon.classList.remove('fa-spin'), 500);
+    });
+    
+    // ===============================================
+    // Fingerprint Enrollment
+    // ===============================================
+    let fingerprintTemplate = null;
+    
+    enrollBtn.addEventListener('click', async () => {
+      const btn = enrollBtn;
+      const section = fingerprintSection;
+      const icon = document.getElementById('fingerprintIcon');
+      const text = document.getElementById('fingerprintText');
+      const badge = document.getElementById('fingerprintBadge');
+      const templateInput = document.getElementById('fingerprintTemplate');
+      
+      try {
+        btn.disabled = true;
+        btn.classList.add('scanning');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Scanning...</span>';
+        section.classList.add('active');
+        section.classList.remove('enrolled');
+        text.textContent = 'Place your finger on the scanner...';
+        
+        // Try API-based enrollment first
+        try {
+          const response = await fetch(`${API_BASE_URL}/scanner/capture`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            signal: AbortSignal.timeout(30000)
+          });
+          
+          const data = await response.json();
+          
+          if (data.success && data.template) {
+            fingerprintTemplate = data.template;
+          } else {
+            throw new Error(data.message || 'Capture failed');
+          }
+        } catch (apiError) {
+          // Fallback to ZKBioOnline
+          console.log('Trying ZKBioOnline fallback...');
+          fingerprintTemplate = await FingerprintEnrollment.enroll();
+        }
+        
+        // Success
+        section.classList.remove('active');
+        section.classList.add('enrolled');
+        text.textContent = 'Fingerprint enrolled successfully ✓';
+        templateInput.value = fingerprintTemplate;
+        badge.className = 'badge badge-success';
+        badge.textContent = 'Enrolled';
+        btn.classList.remove('scanning');
+        btn.classList.add('success');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Re-scan Fingerprint</span>';
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Fingerprint Enrolled!',
+          text: 'Your fingerprint has been captured successfully.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        
+      } catch (error) {
+        console.error('Enrollment error:', error);
+        section.classList.remove('active', 'enrolled');
+        text.textContent = 'Enrollment failed - try again';
+        btn.classList.remove('scanning', 'success');
+        btn.innerHTML = '<i class="fa-solid fa-fingerprint"></i> <span>Scan Fingerprint</span>';
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Enrollment Failed',
+          html: `<p>${error.message}</p>
+                 <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                   <strong>Troubleshooting:</strong><br>
+                   • Ensure scanner is connected via USB<br>
+                   • Check if ZKBioOnline service is running<br>
+                   • Place finger firmly on scanner
+                 </p>`
+        });
+      } finally {
+        btn.disabled = !scannerConnected;
+      }
+    });
+    
+    // ===============================================
+    // Form Submission
+    // ===============================================
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const gender = document.getElementById('gender').value;
+      const position = document.getElementById('position').value;
+      const fingerprint = document.getElementById('fingerprintTemplate').value;
+      
+      if (!username || !password || !gender || !position) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Missing Fields',
+          text: 'Please fill in all required fields.'
+        });
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username,
+            password,
+            gender,
+            position,
+            fingerprintTemplate: fingerprint || null
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Registration Successful!',
+            text: fingerprint 
+              ? 'Account created with fingerprint.' 
+              : 'Account created. Fingerprint can be added later.',
+            confirmButtonText: 'Go to Login',
+            confirmButtonColor: '#0c3b6a'
+          }).then(() => {
+            window.location.href = 'login.html';
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Registration Failed',
+            text: data.message || 'Something went wrong.'
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Connection Error',
+          text: 'Unable to connect to server.'
+        });
+      }
+    });
+    
+    // ===============================================
+    // Password Toggle
+    // ===============================================
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const input = document.getElementById('password');
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
+    });
+  </script>
+</body>
+</html>

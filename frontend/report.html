@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports | Attendance MonitoringSystem</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/report-pdf.css"/>
+
+  <!-- ✅ External Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <img src="assets/Dohinob logo.png" alt="Logo" class="logo" />
+      <ul class="menu">
+        <li><a href="dashboard.html">🏠 Home</a></li>
+        <li><a href="list.html">📑 User List</a></li>
+        <li><a href="records.html">📋 Records</a></li>
+        <li><a href="report.html" class="active">📊 Reports</a></li>
+      </ul>
+      <button id="logoutBtn" class="logout-btn">🚪 Logout</button>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="content">
+      <div class="dashboard-header">
+        <h2>📈 FP-Growth Report & Attendance Analysis</h2>
+        <p>Barangay Dohinob — Monthly Attendance Summary</p>
+      </div>
+
+      <!-- REPORT SECTION -->
+      <div class="report-container">
+        <h3>📅 Attendance Summary Report</h3>
+
+        <!-- FILTERS -->
+        <div class="report-filters">
+          <input type="month" id="reportMonth" />
+          <input type="text" id="searchName" placeholder="🔎 SearchName..."/>
+
+          <select id="filterPosition">
+            <option value="">All Position</option>
+            <option value="official">Barangay Official</option>
+            <option value="staff">Staff</option>
+          </select>
+          <button id="generateReport">🔍 Generate</button>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="summary-cards">
+          <div class="card">
+            <h4>🧩 Frequent Patterns</h4>
+            <ul id="patternList">
+              <li>Loading FP-Growth patterns...</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- CHART -->
+        <div class="card">
+          <h3>📊 Monthly Attendance Trends</h3>
+          <div class="chart-container">
+            <canvas id="attendanceChart"></canvas>
+          </div>
+        </div>
+
+        <!-- EXPORT -->
+        <div class="report-actions">
+          <!-- Only PDF Export Button -->
+          <button id="exportPDF">📄 Export PDF</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JS -->
+  <script src="js/api-config.js"></script>
+  <script src="js/report.js"></script>
+  <script src="js/authGuard.js"></script>
+  <script src="js/logout.js"></script>
+</body>
+</html>

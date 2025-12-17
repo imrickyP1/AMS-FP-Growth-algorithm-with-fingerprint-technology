@@ -1,0 +1,158 @@
+.register-body {
+  margin: 0;
+  padding: 0;
+  background-color: #2b426b;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.register-container {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 15px;
+  width: 340px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.register-container h2 {
+  color: #2b426b;
+  margin-bottom: 20px;
+}
+
+.register-container input,
+.register-container select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+  text-indent: 10px;
+}
+
+.password-field {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
+  font-size: 16px;
+}
+
+.toggle-password:hover {
+  color: #2b426b;
+}
+
+.register-container button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 25px;
+  border: none;
+  background-color: #2b426b;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.register-container button:hover {
+  background-color: #0056d8;
+}
+
+.login-text {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #333;
+}
+
+.login-text a {
+  color: #2b426b;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* ===============================================
+   🔐 Fingerprint Enrollment Styles
+   =============================================== */
+.fingerprint-section {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 2px dashed #ccc;
+}
+
+.fingerprint-section label {
+  display: block;
+  font-weight: bold;
+  color: #2b426b;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.fingerprint-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.fingerprint-status i {
+  font-size: 24px;
+  color: #ccc;
+}
+
+.fingerprint-status.enrolled {
+  background: #d4edda;
+  color: #155724;
+}
+
+.fingerprint-status.enrolled i {
+  color: #28a745;
+}
+
+.fingerprint-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 25px;
+  border: 2px solid #2b426b;
+  background: #fff;
+  color: #2b426b;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.fingerprint-btn:hover {
+  background: #2b426b;
+  color: #fff;
+}
+
+.fingerprint-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fingerprint-btn i {
+  font-size: 18px;
+}

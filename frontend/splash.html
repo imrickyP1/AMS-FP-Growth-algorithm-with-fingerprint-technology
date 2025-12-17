@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Monitoring System</title>
+  <link rel="stylesheet" href="css/splash_screen.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .main-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 30px;
+      padding: 0 20px;
+    }
+    
+    .action-btn {
+      padding: 18px 30px;
+      border: none;
+      border-radius: 35px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    
+    .action-btn.primary {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .action-btn.primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+    }
+    
+    .action-btn.primary i {
+      font-size: 24px;
+    }
+    
+    .action-btn.secondary {
+      background: rgba(255, 255, 255, 0.9);
+      color: #2b426b;
+      border: 2px solid rgba(43, 66, 107, 0.3);
+    }
+    
+    .action-btn.secondary:hover {
+      background: #fff;
+      border-color: #2b426b;
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+    }
+    
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .divider span {
+      padding: 0 15px;
+    }
+    
+    .admin-link {
+      margin-top: 25px;
+      display: block;
+      color: rgb(44, 10, 240);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.3s ease;
+    }
+    
+    .admin-link:hover {
+      color: #2c54ac;
+    }
+    
+    .admin-link i {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body class="splash-body">
+  <div class="splash-container">
+    <header class="splash-header">Attendance Monitoring System</header>
+    <img src="assets/Dohinob logo.png" alt="Barangay Seal" class="barangay-logo">
+    
+    <div class="main-actions">
+      <!-- Primary: Time Log with Fingerprint -->
+      <!-- <a href="timelog.html" class="action-btn primary">
+        <i class="fa-solid fa-fingerprint"></i>
+        Time Log (Fingerprint)
+      </a> -->
+      
+      <div class="divider"><span>or</span></div>
+      
+      <!-- Secondary: Credential Login (fallback) -->
+      <a href="login.html" class="action-btn secondary">
+        <i class="fa-solid fa-keyboard"></i>
+        Login with Credentials
+      </a>
+    </div>
+    
+    <a href="login.html?admin=true" class="admin-link">
+      <i class="fa-solid fa-shield"></i> Admin Access
+    </a>
+    
+    <footer class="splash-footer">Barangay Dohinob Attendance System</footer>
+  </div>
+
+  <!-- API Settings Button -->
+  <button class="api-settings-btn" id="apiSettingsBtn" title="API Settings">
+    <i class="fa-solid fa-server"></i>
+  </button>
+
+  <!-- API Settings Modal -->
+  <div class="api-modal" id="apiModal">
+    <div class="api-modal-content">
+      <div class="api-modal-header">
+        <i class="fa-solid fa-gears"></i> API Configuration
+      </div>
+
+      <div id="apiOptions"></div>
+
+      <div class="api-status">
+        <div class="api-status-item">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="statusText">Checking connection...</span>
+        </div>
+      </div>
+
+      <div class="api-modal-footer">
+        <button class="api-modal-btn close" onclick="document.getElementById('apiModal').classList.remove('show')">Close</button>
+        <button class="api-modal-btn apply" id="applyBtn">Apply</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api-config.js"></script>
+  <script src="js/splash.js"></script>
+  <script>
+    // API Settings Modal Logic
+    const apiSettingsBtn = document.getElementById('apiSettingsBtn');
+    const apiModal = document.getElementById('apiModal');
+    const apiOptions = document.getElementById('apiOptions');
+    const applyBtn = document.getElementById('applyBtn');
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+
+    let selectedBackend = API_CHOICE.backend;
+
+    // Populate API options
+    function initializeAPIOptions() {
+      apiOptions.innerHTML = Object.entries(API_URLS).map(([key, url]) => `
+        <div class="api-option ${key === API_CHOICE.backend ? 'active' : ''}" data-backend="${key}">
+          <div class="api-option-radio"></div>
+          <div class="api-option-info">
+            <div class="api-option-title">${key === 'nodejs' ? 'Node.js Express' : '.NET Core 9'}</div>
+            <div class="api-option-url">${url}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // Add click handlers
+      document.querySelectorAll('.api-option').forEach(option => {
+        option.addEventListener('click', function() {
+          document.querySelectorAll('.api-option').forEach(o => o.classList.remove('active'));
+          this.classList.add('active');
+          selectedBackend = this.getAttribute('data-backend');
+          checkAPIStatus();
+        });
+      });
+    }
+
+    // Check API status
+    async function checkAPIStatus() {
+      const url = API_URLS[selectedBackend];
+      try {
+        const response = await fetch(`${url}/api/auth/status`, { 
+          method: 'GET',
+          mode: 'cors',
+          timeout: 3000
+        });
+        
+        if (response.ok) {
+          statusDot.classList.remove('offline');
+          statusDot.classList.add('online');
+          statusText.textContent = `${selectedBackend.toUpperCase()} API: Online`;
+        } else {
+          throw new Error('API offline');
+        }
+      } catch (error) {
+        statusDot.classList.remove('online');
+        statusDot.classList.add('offline');
+        statusText.textContent = `${selectedBackend.toUpperCase()} API: Offline`;
+      }
+    }
+
+    // Settings button click
+    apiSettingsBtn.addEventListener('click', () => {
+      apiModal.classList.add('show');
+      initializeAPIOptions();
+      checkAPIStatus();
+    });
+
+    // Apply button
+    applyBtn.addEventListener('click', () => {
+      if (selectedBackend !== API_CHOICE.backend) {
+        API_CHOICE.backend = selectedBackend;
+        location.reload();
+      } else {
+        apiModal.classList.remove('show');
+      }
+    });
+
+    // Close modal on outside click
+    apiModal.addEventListener('click', (e) => {
+      if (e.target === apiModal) {
+        apiModal.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

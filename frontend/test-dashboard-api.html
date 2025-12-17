@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard API Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .success { color: green; }
+        .error { color: red; }
+        pre { background: #f0f0f0; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard API Connection Test</h1>
+    <button onclick="testAPI()">Test API Connection</button>
+    <div id="result"></div>
+
+    <script src="js/api-config.js"></script>
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Testing...</p>';
+
+            try {
+                console.log('API_BASE_URL:', API_BASE_URL);
+                const url = `${API_BASE_URL}/attendance/home/dashboard-summary`;
+                console.log('Fetching from:', url);
+
+                const res = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                console.log('Response status:', res.status);
+                const data = await res.json();
+                console.log('Response data:', data);
+
+                resultDiv.innerHTML = `
+                    <h2 class="success">✅ API Connected!</h2>
+                    <h3>Response:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    <h3>Stats:</h3>
+                    <ul>
+                        <li>Total Officials: ${data.totalOfficials}</li>
+                        <li>Total Staff: ${data.totalStaff}</li>
+                        <li>On Time: ${data.ontime}</li>
+                        <li>Late: ${data.late}</li>
+                        <li>Undertime: ${data.undertime}</li>
+                        <li>Overtime: ${data.overtime}</li>
+                        <li>Enrolled Users: ${data.enrolledUsers}</li>
+                    </ul>
+                `;
+
+            } catch (err) {
+                console.error('Error:', err);
+                resultDiv.innerHTML = `
+                    <h2 class="error">❌ API Connection Failed</h2>
+                    <p><strong>Error:</strong> ${err.message}</p>
+                    <p><strong>API URL:</strong> ${API_BASE_URL}</p>
+                    <p>Check console for details (F12)</p>
+                `;
+            }
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            setTimeout(testAPI, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance Records | Attendance Monitoring System</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/trend.css" />
+
+    <!-- ✅ SweetAlert for alerts -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!--Chart.js-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+
+    <!-- ✅ Load scripts after DOM is ready -->
+    <script defer src="js/api-config.js"></script>
+    <script defer src="js/records.js"></script>
+    <script defer src="js/authGuard.js"></script>
+    <script defer src="js/logout.js"></script>
+  </head>
+
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <img src="assets/Dohinob logo.png" alt="Logo" class="logo" />
+        <ul class="menu">
+          <li><a href="dashboard.html">🏠 Home</a></li>
+          <li><a href="list.html">📑 User List</a></li>
+          <li><a href="records.html" class="active">📋 Records</a></li>
+          <li><a href="report.html">📊 Reports</a></li>
+        </ul>
+        <button id="logoutBtn" class="logout-btn">🚪 Logout</button>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="content">
+        <div class="dashboard-header">
+          <h2 id="welcomeText">Welcome, Admin</h2>
+          <p>Monthly Attendance Records</p>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="report-filters" id="filterContainer">
+
+          <!---Search name-->
+          <input type="text" id="searchName" placeholder="🔎 searchName..."/>
+          <label for="fromDate" class="date-label">From:</label>
+          <input type="date" id="fromDate" />
+          <label for="toDate" class="date-label">To:</label>
+          <input type="date" id="toDate"/>
+          <button id="filterBtn">🧹 Apply Filter</button>
+          <button id="trendBtn" class="trend-btn">📈 Trend</button>
+        </div>
+
+        <!-- Attendance Table -->
+        <div class="table-container">
+          <h3>📅 Attendance Records</h3>
+          <table id="attendanceTable">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Position</th>
+                <th>Date</th>
+                <th>AM Time In</th>
+                <th>AM Time Out</th>
+                <th>PM Time IN</th>
+                <th>PM Time Out</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceTableBody">
+              <tr>
+                <td colspan="8" style="text-align:center;">
+                  Loading data...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Trend Modal-->
+        <div id="trendModal" class="trend-modal">
+          <div class="trend-content">
+            <span id="closeTrend" class="close-btn">&times;</span>
+            <h3>Attendance Trend</h3>
+            <canvas id="trendChart"></canvas>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,633 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Time Log | Attendance Monitoring System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a365d 0%, #2b426b 50%, #3d5a80 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .timelog-container {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      color: #2b426b;
+      margin-bottom: 5px;
+      font-size: 24px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .datetime-display {
+      background: linear-gradient(135deg, #2b426b 0%, #3d5a80 100%);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      color: #fff;
+    }
+
+    .date {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .time {
+      font-size: 48px;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 2px;
+    }
+
+    .session-badge {
+      display: inline-block;
+      padding: 5px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .session-badge.am {
+      background: #ffc107;
+      color: #333;
+    }
+
+    .session-badge.pm {
+      background: #17a2b8;
+      color: #fff;
+    }
+
+    .fingerprint-scanner {
+      padding: 40px;
+      margin: 20px 0;
+      border: 3px dashed #ddd;
+      border-radius: 20px;
+      background: #f8f9fa;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .fingerprint-scanner:hover {
+      border-color: #2b426b;
+      background: #f0f4f8;
+    }
+
+    .fingerprint-scanner.scanning {
+      border-color: #2b426b;
+      background: linear-gradient(135deg, #e8f0fe 0%, #d4e4f7 100%);
+      animation: pulse 1.5s infinite;
+    }
+
+    .fingerprint-scanner.success {
+      border-color: #28a745;
+      background: #d4edda;
+    }
+
+    .fingerprint-scanner.error {
+      border-color: #dc3545;
+      background: #f8d7da;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(43, 66, 107, 0.4);
+      }
+
+      50% {
+        transform: scale(1.01);
+        box-shadow: 0 0 0 15px rgba(43, 66, 107, 0);
+      }
+    }
+
+    .scanner-icon {
+      font-size: 100px;
+      color: #2b426b;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .fingerprint-scanner.scanning .scanner-icon {
+      animation: fingerPulse 1s infinite;
+      color: #0056d8;
+    }
+
+    .fingerprint-scanner.success .scanner-icon {
+      color: #28a745;
+    }
+
+    .fingerprint-scanner.error .scanner-icon {
+      color: #dc3545;
+    }
+
+    @keyframes fingerPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.15);
+        opacity: 0.7;
+      }
+    }
+
+    .scanner-text {
+      font-size: 18px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .fingerprint-scanner.scanning .scanner-text {
+      color: #0056d8;
+      font-weight: 600;
+      animation: textGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes textGlow {
+      0%, 100% {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(0, 86, 216, 0.3);
+      }
+      50% {
+        opacity: 0.7;
+        text-shadow: 0 0 20px rgba(0, 86, 216, 0.6), 0 0 30px rgba(0, 86, 216, 0.4);
+      }
+    }
+
+    .scanner-hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 8px;
+    }
+
+    .fingerprint-scanner.scanning .scanner-hint {
+      color: #0056d8;
+      animation: fadeInOut 2s ease-in-out infinite;
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .action-info {
+      margin-top: 15px;
+      padding: 12px;
+      background: #e8f0fe;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #2b426b;
+    }
+
+    .action-info strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 3px;
+    }
+
+    .result-panel {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 15px;
+      display: none;
+    }
+
+    .result-panel.show {
+      display: block;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-panel.success {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      border: 1px solid #28a745;
+    }
+
+    .result-panel.error {
+      background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+      border: 1px solid #dc3545;
+    }
+
+    .result-icon {
+      font-size: 50px;
+      margin-bottom: 10px;
+    }
+
+    .result-panel.success .result-icon {
+      color: #28a745;
+    }
+
+    .result-panel.error .result-icon {
+      color: #dc3545;
+    }
+
+    .result-name {
+      font-size: 22px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .result-position {
+      font-size: 14px;
+      color: #666;
+      text-transform: capitalize;
+    }
+
+    .result-type {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 25px;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .result-type.in {
+      background: #28a745;
+      color: #fff;
+    }
+
+    .result-type.out {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    .result-time {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .recent-logs {
+      margin-top: 25px;
+      text-align: left;
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+
+    .recent-logs h3 {
+      color: #2b426b;
+      font-size: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logs-list {
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .log-item {
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #2b426b;
+    }
+
+    .log-item.time-in {
+      border-left-color: #28a745;
+    }
+
+    .log-item.time-out {
+      border-left-color: #dc3545;
+    }
+
+    .log-info .log-name {
+      font-weight: bold;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .log-info .log-position {
+      font-size: 11px;
+      color: #666;
+      text-transform: capitalize;
+    }
+
+    .log-meta {
+      text-align: right;
+    }
+
+    .log-meta .log-type {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .log-type.in {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .log-type.out {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .log-meta .log-time {
+      font-size: 12px;
+      color: #666;
+      margin-top: 3px;
+    }
+
+    .nav-links {
+      margin-top: 25px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-link i {
+      margin-right: 5px;
+    }
+
+    .connection-indicator {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+
+    .connection-indicator.online {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .connection-indicator.offline {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .connection-indicator .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .connection-indicator.online .dot {
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    /* Scanner Control Button */
+    .scanner-control {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 25px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+    }
+
+    .btn-success.active {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      animation: glow 1.5s ease-in-out infinite;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4); }
+      50% { box-shadow: 0 6px 25px rgba(220, 53, 69, 0.7); }
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Connection Indicator -->
+  <div class="connection-indicator offline" id="connectionIndicator">
+    <span class="dot"></span>
+    <span id="connectionLabel">Connecting...</span>
+  </div>
+
+  <div class="timelog-container">
+    <img src="assets/Dohinob logo.png" alt="Logo" class="logo">
+    <h1>Time Log</h1>
+    <p class="subtitle">Scan fingerprint to record attendance</p>
+
+    <!-- Date & Time Display -->
+    <div class="datetime-display">
+      <div class="date" id="currentDate">Loading...</div>
+      <div class="time" id="currentTime">--:--:--</div>
+      <span class="session-badge am" id="sessionBadge">AM</span>
+    </div>
+
+    <!-- Scanner Control Button -->
+    <div class="scanner-control">
+      <button class="btn btn-success" id="btnAutoScan">
+        <i class="fas fa-fingerprint"></i>
+        <span id="btnAutoScanText">Start Auto-Scan</span>
+      </button>
+    </div>
+
+    <!-- Fingerprint Scanner -->
+    <div class="fingerprint-scanner" id="fingerprintScanner">
+      <i class="fa-solid fa-fingerprint scanner-icon" id="scannerIcon"></i>
+      <p class="scanner-text" id="scannerText">Tap or place finger to scan</p>
+      <p class="scanner-hint" id="scannerHint">Keep your finger steady on the scanner</p>
+    </div>
+
+    <!-- Action Info -->
+    <div class="action-info" id="actionInfo">
+      <strong id="nextAction">Next Scan: Time In</strong>
+      <span id="actionHint">First scan of the day will be recorded as Time In</span>
+    </div>
+
+    <!-- Result Panel -->
+    <div class="result-panel" id="resultPanel">
+      <i class="fa-solid fa-check-circle result-icon" id="resultIcon"></i>
+      <div class="result-name" id="resultName">--</div>
+      <div class="result-position" id="resultPosition">--</div>
+      <span class="result-type in" id="resultType">Time In</span>
+      <div class="result-time" id="resultTime">--</div>
+    </div>
+
+    <!-- Recent Logs -->
+    <div class="recent-logs">
+      <h3><i class="fa-solid fa-clock-rotate-left"></i> Today's Logs</h3>
+      <div class="logs-list" id="logsList">
+        <p style="color: #999; font-size: 12px; text-align: center; padding: 20px;">No logs yet today</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Links -->
+  <div class="nav-links">
+    <a href="login.html" class="nav-link">
+      <i class="fa-solid fa-keyboard"></i> Login with Credentials
+    </a>
+    <a href="splash.html" class="nav-link">
+      <i class="fa-solid fa-home"></i> Home
+    </a>
+  </div>
+
+  <script src="js/api-config.js?v=auto01"></script>
+  <script src="js/scanner-service.js?v=auto01"></script>
+  <script src="js/fingerprint.js?v=auto01"></script>
+  <script src="js/fingerprint-attendance.js?v=auto01"></script>
+  <script src="js/authGuard.js?v=auto01"></script>
+  <script src="js/timelog.js?v=auto01"></script>
+
+  <script>
+    // Enhanced connection status with scanner detection
+    async function updateConnectionStatus() {
+      const indicator = document.getElementById('connectionIndicator');
+      const label = document.getElementById('connectionLabel');
+
+      try {
+        // Check scanner service
+        const isAvailable = await ScannerService.isAvailable();
+
+        if (isAvailable) {
+          indicator.className = 'connection-indicator online';
+          label.textContent = 'Scanner Ready';
+        } else {
+          // Check API at least
+          const response = await fetch(`${API_BASE_URL}/auth/status`, {
+            signal: AbortSignal.timeout(3000)
+          });
+
+          if (response.ok) {
+            indicator.className = 'connection-indicator online';
+            label.textContent = 'API Online (No Scanner)';
+          } else {
+            throw new Error('API offline');
+          }
+        }
+      } catch (error) {
+        indicator.className = 'connection-indicator offline';
+        label.textContent = 'Connection Lost';
+      }
+    }
+
+    // Run on load and periodically
+    document.addEventListener('DOMContentLoaded', () => {
+      updateConnectionStatus();
+      setInterval(updateConnectionStatus, 10000);
+    });
+  </script>
+</body>
+
+</html> -->
